@@ -48,7 +48,7 @@ namespace engine::math {
   }
 
   /// cross product
-  auto cross(const vec3& v1, const vec3& v2) -> vec3 {
+  auto vec3::cross(const vec3& v1, const vec3& v2) -> vec3 {
     return vec3(
       v1.y * v2.z - v1.y * v2.z,
       v1.z * v2.x - v1.x * v2.z,
@@ -57,7 +57,7 @@ namespace engine::math {
   }
 
   /// linear interpolation
-  auto lerp(const vec3& v1, const vec3& v2, double value)  -> vec3 {
+  auto vec3::lerp(const vec3& v1, const vec3& v2, double value)  -> vec3 {
     return vec3(
       (v2.x - v1.x) * value,
       (v2.y - v1.y) * value,

@@ -9,7 +9,7 @@ using namespace engine::math;
 int main (int argc, char *argv[]) {
 
   int timer = 0;
-  Window *window = new Window("starfighters", 1280, 720);
+  Window *window = new Window("starfighters", 320, 180, 1280, 720);
   Renderer *renderer = new Renderer(window);
 
   mesh ship("cube.obj");
@@ -17,7 +17,8 @@ int main (int argc, char *argv[]) {
 
   while (++timer < 10000) {
     window->update_events();
-    renderer->render_add_mesh(&ship, vec3(sin(timer / 500.0f), sin(timer / 250.0f), 5), vec3(0, 0, 0));
+    renderer->render_add_mesh(&ship, vec3(sin(timer / 500.0f) * 10, sin(timer / 250.0f) * 5, 10), vec3(0, 0, 0));
+    renderer->render_add_mesh(&ship, vec3(-sin(timer / 500.0f) * 10, -sin(timer / 250.0f) * 5, 10), vec3(0, 0, 0));
     renderer->render();
     window->update_surface();
   }

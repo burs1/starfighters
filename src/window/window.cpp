@@ -1,10 +1,13 @@
 #include "window.h"
+#include <SDL_render.h>
 
 using namespace std;
 
 namespace engine {
-  Window::Window (const char *title, int p_w, int p_h, bool fullscreen)
-    : _fullscreen(fullscreen), isOpened(_isOpened), _w(p_w), _h(p_h), w(_w), h(_h) {
+  Window::Window (const char *title, int resw, int resh, int winw, int winh, bool fullscreen)
+    : _fullscreen(fullscreen), isOpened(_isOpened),
+    _w(winw), _h(winh), w(_w), h(_h),
+    _resw(resw), _resh(resh), resw(_resw), resh(_resh) {
     // Init SDL
     if (SDL_Init(SDL_INIT_EVERYTHING) < 0)
       throw runtime_error(SDL_GetError());
@@ -28,6 +31,8 @@ namespace engine {
 
     if (_renderer == NULL)
       throw runtime_error(SDL_GetError());
+
+    SDL_RenderSetLogicalSize(_renderer, resw, resh);
   }
 
   Window::~Window() {

@@ -8,11 +8,11 @@ using namespace engine::math;
 namespace engine::gfx {
   Renderer::Renderer(Window* window)
     : _window(window) {
-      set_perspective(90, 0.1f, 1000);
+      set_perspective(60, 0.1f, 1000);
   }
 
   auto Renderer::set_perspective(float fov, float near, float far) -> void {
-    float aspratio = (float)_window->h / _window->w;
+    float aspratio = (float)_window->resh / _window->resw;
     _projmat.set_perspective(fov, aspratio, near, far);
   }
 
@@ -22,27 +22,39 @@ namespace engine::gfx {
 
   auto Renderer::render() -> void {
     for(auto [mesh, pos, rot] : _meshesToDraw) {
-      // Project verticies
-      vec3 *projVerts = new vec3[mesh->verts.size()];
-      for(int i = 0; i < mesh->verts.size(); ++i) {
-        projVerts[i] = (mesh->verts[i] + pos) * _projmat;
-
-        // scale to screen
-        projVerts[i].x += 1;
-        projVerts[i].y += 1;
-
-        projVerts[i].x *= 0.5 * _window->w;
-        projVerts[i].y *= 0.5 * _window->h;
-      }
-
       // Draw faces
       for(auto [p1, p2, p3] : mesh->faces) {
-        _window->draw_line(projVerts[p1].x, projVerts[p1].y, projVerts[p2].x, projVerts[p2].y);
-        _window->draw_line(projVerts[p2].x, projVerts[p2].y, projVerts[p3].x, projVerts[p3].y);
-        _window->draw_line(projVerts[p3].x, projVerts[p3].y, projVerts[p1].x, projVerts[p1].y);
-      }
+        // Project verticies
+        vec3 projVerts[] = {mesh->verts[p1], mesh->verts[p2], mesh->verts[p3]};
+        for(int i = 0; i < 3; ++i)
+          projVerts[i] = (projVerts[i] + pos) * _projmat;
 
-      delete [] projVerts;
+        // Find normal
+        vec3 l1, l2, nrml;
+        l1 = projVerts[1] - projVerts[0];
+        l2 = projVerts[2] - projVerts[1];
+        nrml = vec3::cross(l1, l2);
+
+        // Don't draw if normal look in other direction
+        if (nrml.z > 0)
+          continue;
+
+        // scale to screen
+        for(int i = 0; i < 3; ++i) {
+          projVerts[i].x += 1;
+          projVerts[i].y += 1;
+
+          projVerts[i].x *= 0.5 * _window->resw;
+          projVerts[i].y *= 0.5 * _window->resh;
+        }
+
+        // Draw lines
+        for (int i = 0; i < 3; ++i)
+          _window->draw_line(
+            projVerts[i].x, projVerts[i].y,
+            projVerts[(i + 1)%3].x, projVerts[(i + 1)%3].y
+          );
+      }
     }
 
     _meshesToDraw.clear();
