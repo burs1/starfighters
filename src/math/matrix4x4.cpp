@@ -13,7 +13,7 @@ namespace engine::math {
   // === Constructors and destructors ===
   /// Constructor
   matrix4x4::matrix4x4() {
-    setIdentity();
+    set_identity();
   }
 
   /// Copy constructor
@@ -23,11 +23,11 @@ namespace engine::math {
 
   // === Methods ===
   /// Set identity
-  auto matrix4x4::setIdentity() -> void {
+  auto matrix4x4::set_identity() -> void {
     // fill matrix 
     for (int i = 0; i < 4; ++i) {
       for (int j = 0; j < 4; ++j)
-        values[i][j] = i == j ? 1 : 0;
+        m[i][j] = i == j ? 1 : 0;
     }
 
     // final matrix:
@@ -38,93 +38,91 @@ namespace engine::math {
   }
 
   /// Set translation
-  auto matrix4x4::setTranslation(const vec3& v) -> void {
-    values[3][0] = v.x;
-    values[3][1] = v.y;
-    values[3][2] = v.z;
+  auto matrix4x4::set_translation(const vec3& v) -> void {
+    m[3][0] = v.x;
+    m[3][1] = v.y;
+    m[3][2] = v.z;
   }
 
   /// Return tranlslation v
-  auto matrix4x4::getTranslation() -> vec3 {
-    return vec3(values[3][0], values[3][1], values[3][2]);
+  auto matrix4x4::get_translation() -> vec3 {
+    return vec3(m[3][0], m[3][1], m[3][2]);
   }
 
   /// Return rightward v
   auto matrix4x4::right() -> vec3 {
-    return vec3(values[0][0], values[0][1], values[0][2]);
+    return vec3(m[0][0], m[0][1], m[0][2]);
   }
 
   /// Return upward v
   auto matrix4x4::up() -> vec3 {
-    return vec3(values[1][0], values[1][1], values[1][2]);
+    return vec3(m[1][0], m[1][1], m[1][2]);
   }
 
   /// Return forward v
   auto matrix4x4::forward() -> vec3 {
-    return vec3(values[2][0], values[2][1], values[2][2]);
+    return vec3(m[2][0], m[2][1], m[2][2]);
   }
 
   /// Set scale
-  auto matrix4x4::setScale(const vec3& v) -> void {
-    values[0][0] = v.x;
-    values[1][1] = v.y;
-    values[2][2] = v.z;
+  auto matrix4x4::set_scale(const vec3& v) -> void {
+    m[0][0] = v.x;
+    m[1][1] = v.y;
+    m[2][2] = v.z;
   }
 
   /// Set rotation
-  auto matrix4x4::setRot(double x, double y, double z) -> void {
-    setRotX(x);
-    setRotY(y);
-    setRotZ(z);
+  auto matrix4x4::set_rot(float x, float y, float z) -> void {
+    set_rotX(x);
+    set_rotY(y);
+    set_rotZ(z);
   }
 
   /// Set rotation
-  auto matrix4x4::setRot(const vec3& v) -> void {
-    setRotX(v.x);
-    setRotY(v.y);
-    setRotZ(v.z);
+  auto matrix4x4::set_rot(const vec3& v) -> void {
+    set_rotX(v.x);
+    set_rotY(v.y);
+    set_rotZ(v.z);
   }
 
   /// Set x rotation
-  auto matrix4x4::setRotX(double rot) -> void {
-    values[1][1] = cos(rot);
-    values[1][2] = sin(rot);
-    values[2][1] = -sin(rot);
-    values[2][2] = cos(rot);
+  auto matrix4x4::set_rotX(float rot) -> void {
+    m[1][1] = cos(rot);
+    m[1][2] = sin(rot);
+    m[2][1] = -sin(rot);
+    m[2][2] = cos(rot);
   }
  
   /// Set y rotation
-  auto matrix4x4::setRotY(double rot) -> void {
-    values[0][0] = cos(rot);
-    values[0][2] = -sin(rot);
-    values[2][0] = sin(rot);
-    values[2][2] = cos(rot);
+  auto matrix4x4::set_rotY(float rot) -> void {
+    m[0][0] = cos(rot);
+    m[0][2] = -sin(rot);
+    m[2][0] = sin(rot);
+    m[2][2] = cos(rot);
   }
 
   /// Set z rotation
-  auto matrix4x4::setRotZ(double rot) -> void {
-    values[0][0] = cos(rot);
-    values[0][1] = sin(rot);
-    values[1][0] = -sin(rot);
-    values[1][1] = cos(rot);
+  auto matrix4x4::set_rotZ(float rot) -> void {
+    m[0][0] = cos(rot);
+    m[0][1] = sin(rot);
+    m[1][0] = -sin(rot);
+    m[1][1] = cos(rot);
   }
 
   /// Set persprective
-  auto matrix4x4::setPerspective(double fov, double aspect, double znear, double zfar) -> void {
-		double yscale = 1.0f / tan(fov / 2.0f);
-		double xscale = yscale / aspect;
-		values[0][0] = xscale;
-		values[1][1] = yscale;
-		values[2][2] = zfar / (zfar - znear);
-		values[2][3] = 1.0f;
-		values[3][2] = (-znear * zfar) / (zfar - znear);
-		values[3][3] = 0.0f;
-
+  auto matrix4x4::set_perspective(float fov, float aspratio, float near, float far) -> void {
+    float fovrad = 1.0f / tanf(fov / 2 / 180 * 3.14159f);
+		m[0][0] = aspratio * fovrad;
+		m[1][1] = fovrad;
+		m[2][2] = far / (far - near);
+		m[2][3] = 1.0f;
+		m[3][2] = (-near * far) / (far - near);
+		m[3][3] = 0.0f;
 	}
 	auto matrix4x4::__copy__(const matrix4x4& other) -> void {
 	  for (int i = 0; i < 4; ++i) {
 	    for (int j = 0; j < 4; ++j)
-	      values[i][j] = other.values[i][j];
+	      m[i][j] = other.m[i][j];
 	  }
 	}
 

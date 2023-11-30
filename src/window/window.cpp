@@ -1,11 +1,10 @@
 #include "window.h"
-#include <SDL_events.h>
 
 using namespace std;
 
 namespace engine {
-  Window::Window (const char *title, int w, int h, bool fullscreen)
-    : _fullscreen(fullscreen), isOpened(_isOpened) {
+  Window::Window (const char *title, int p_w, int p_h, bool fullscreen)
+    : _fullscreen(fullscreen), isOpened(_isOpened), _w(p_w), _h(p_h), w(_w), h(_h) {
     // Init SDL
     if (SDL_Init(SDL_INIT_EVERYTHING) < 0)
       throw runtime_error(SDL_GetError());
@@ -15,7 +14,7 @@ namespace engine {
       title, 
       SDL_WINDOWPOS_CENTERED, 
       SDL_WINDOWPOS_CENTERED, 
-      w, h, 
+      _w, _h, 
       _fullscreen ? SDL_WINDOW_FULLSCREEN : SDL_WINDOW_SHOWN
     );
 

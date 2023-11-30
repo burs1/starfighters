@@ -8,8 +8,10 @@
 #pragma once
 
 #include <cmath>
+#include "matrix4x4.h"
 
 namespace engine::math {
+  class matrix4x4;
   class vec3 {
   public:
     // === Constructors & Destructors ===
@@ -21,17 +23,17 @@ namespace engine::math {
 
     // === Methods ===
     /// vector's length
-    constexpr auto magnitude()        const -> double;
+    constexpr auto magnitude()     const -> double;
     
     /// normalize components
-    auto normalize()                        -> void;
+    auto normalize()                     -> void;
 
     /// linear interpolation
     auto lerp(const vec3&, double)       -> void;
 
     // === Static methods ===
     /// normalize components
-    static auto normalized(const vec3&)                          -> vec3;
+    static auto normalized(const vec3&)                       -> vec3;
 
     /// dot product
     constexpr static auto dot(const vec3&, const vec3&)       -> double;
@@ -64,6 +66,11 @@ namespace engine::math {
     auto operator/(const double&)     const -> vec3;
 
     auto operator/=(const double&)          -> void;
+
+    /// Matrix multiplication
+    auto operator*=(const matrix4x4&)       -> void;
+    
+    auto operator*(const matrix4x4&)        -> vec3;
 
     /// Components comparison
     auto operator==(const vec3&)   const -> bool;

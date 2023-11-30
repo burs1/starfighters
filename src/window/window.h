@@ -22,6 +22,7 @@ namespace engine {
     auto draw_line(int, int, int, int)              -> void;
     
     const bool &isOpened;
+    const int &w, &h;
 
   private:
     // vars
@@ -29,7 +30,9 @@ namespace engine {
     SDL_Renderer *_renderer;
 
     SDL_Color _clearColor = SDL_Color{0, 0, 0, 255};
-    SDL_Color _drawColor;
+    SDL_Color _drawColor = SDL_Color{255, 255, 255, 255};
+
+    int _w, _h;
 
     bool _fullscreen;
     bool _isOpened;

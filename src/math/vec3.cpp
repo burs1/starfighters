@@ -95,8 +95,6 @@ namespace engine::math {
     z -= other.z;
   }
 
-  /// Matrix4x4 multiplication
-
   /// Scale
   auto vec3::operator*(const double &value) const -> vec3 {
     return vec3(x * value, y * value, z * value);
@@ -116,6 +114,30 @@ namespace engine::math {
     x /= value;
     y /= value;
     z /= value;
+  }
+
+  /// Matrix multiplication
+  auto vec3::operator*=(const matrix4x4 &mtrx)       -> void {
+    vec3 res = operator*(mtrx);
+    x = res.x;
+    y = res.y;
+    z = res.z;
+  }
+  
+  auto vec3::operator*(const matrix4x4 &mtrx) -> vec3 {
+    vec3 res;
+    res.x = x * mtrx.m[0][0] + y * mtrx.m[1][0] + z * mtrx.m[2][0] + mtrx.m[3][0];
+    res.y = x * mtrx.m[0][1] + y * mtrx.m[1][1] + z * mtrx.m[2][1] + mtrx.m[3][1];
+    res.z = x * mtrx.m[0][2] + y * mtrx.m[1][2] + z * mtrx.m[2][2] + mtrx.m[3][2];
+    float w = x * mtrx.m[0][3] + y * mtrx.m[1][3] + z * mtrx.m[2][3] + mtrx.m[3][3];
+
+    if (w != 0.0f) {
+      res.x /= w;
+      res.y /= w;
+      res.z /= w;
+    }
+
+    return res;
   }
 
   /// Components comparison

@@ -10,6 +10,7 @@
 #include "vec3.h"
 
 namespace engine::math {
+  class vec3;
   class matrix4x4 {
   public:
     // === Constructors and destructors ===
@@ -21,13 +22,13 @@ namespace engine::math {
 
     // === Methods ===
     /// Set "zero rotation" matrix
-    auto setIdentity()                  -> void;
+    auto set_identity()                  -> void;
 
     /// Set translation by vector
-    auto setTranslation(const vec3&) -> void;
+    auto set_translation(const vec3&) -> void;
 
     /// Return translation vector
-    auto getTranslation()               -> vec3;
+    auto get_translation()               -> vec3;
 
     /// Return rightward vector
     auto right()                        -> vec3;
@@ -39,34 +40,34 @@ namespace engine::math {
     auto forward()                      -> vec3;
 
     /// Set scale by vector
-    auto setScale(const vec3&)          -> void;
+    auto set_scale(const vec3&)          -> void;
 
     /// Set rotation
-    auto setRot(double, double, double) -> void;
+    auto set_rot(float, float, float) -> void;
 
     /// Set rotation
-    auto setRot(const vec3&)            -> void;
+    auto set_rot(const vec3&)            -> void;
 
     /// Set x rotation
-    auto setRotX(double)                -> void;
+    auto set_rotX(float)                -> void;
     
     /// Set y rotation
-    auto setRotY(double)                -> void;
+    auto set_rotY(float)                -> void;
 
     /// Set x rotation
-    auto setRotZ(double)                -> void;
+    auto set_rotZ(float)                -> void;
 
     /// Set perspective 
-    auto setPerspective(double, double, double, double) -> void;
+    auto set_perspective(float, float, float, float) -> void;
 
     // === Overloads ===
     /// Copy
     auto operator=(const matrix4x4&)    -> void;
 
-  private:
-    /// Copy values from other matrix
-    auto __copy__(const matrix4x4&)     -> void;
+    float m[4][4];
 
-    double values[4][4];
+  private:
+    /// Copy m from other matrix
+    auto __copy__(const matrix4x4&)     -> void;
   };
 }
