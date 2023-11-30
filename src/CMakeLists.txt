@@ -2,6 +2,7 @@
 set(INCLUDE_DIRS window)
 
 # - add subdirs
+add_subdirectory(math)
 add_subdirectory(window)
 
 # - add lib
@@ -14,5 +15,5 @@ target_include_directories(Engine PUBLIC ${INCLUDE_DIRS})
 target_link_libraries(
   Engine
   PUBLIC Window
+  PUBLIC EngineMath
 )
-
