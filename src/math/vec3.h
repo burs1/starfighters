@@ -16,33 +16,33 @@ namespace engine::math {
   public:
     // === Constructors & Destructors ===
     /// Constructor
-    explicit vec3(double p_x = 0, double p_y = 0, double p_z = 0);
+    explicit vec3(float p_x = 0, float p_y = 0, float p_z = 0);
     
     /// Copy constructor
     vec3(const vec3&);
 
     // === Methods ===
     /// vector's length
-    constexpr auto magnitude()     const -> double;
+    constexpr auto magnitude()     const -> float;
     
     /// normalize components
     auto normalize()                     -> void;
 
     /// linear interpolation
-    auto lerp(const vec3&, double)       -> void;
+    auto lerp(const vec3&, float)       -> void;
 
     // === Static methods ===
     /// normalize components
     static auto normalized(const vec3&)                       -> vec3;
 
     /// dot product
-    constexpr static auto dot(const vec3&, const vec3&)       -> double;
+    static auto dot(const vec3&, const vec3&)                 -> float;
 
     /// cross product
     static auto cross(const vec3&, const vec3&)               -> vec3;
 
     /// linear interpolation
-    static auto lerp(const vec3&, const vec3&, double value)  -> vec3;
+    static auto lerp(const vec3&, const vec3&, float value)  -> vec3;
 
     // === Overloads ===
     /// Copy 
@@ -59,13 +59,13 @@ namespace engine::math {
     auto operator-=(const vec3&)         -> void;
 
     /// Scale
-    auto operator*(const double&)     const -> vec3;
+    auto operator*(const float&)     const -> vec3;
 
-    auto operator*=(const double&)          -> void;
+    auto operator*=(const float&)          -> void;
 
-    auto operator/(const double&)     const -> vec3;
+    auto operator/(const float&)     const -> vec3;
 
-    auto operator/=(const double&)          -> void;
+    auto operator/=(const float&)          -> void;
 
     /// Matrix multiplication
     auto operator*=(const matrix4x4&)       -> void;
@@ -87,6 +87,6 @@ namespace engine::math {
     auto operator<=(const vec3&)   const -> bool;
 
     // === Attributes ===
-    double x, y, z;
+    float x, y, z;
   };
 }

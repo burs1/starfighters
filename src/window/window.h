@@ -15,6 +15,10 @@ namespace engine {
 
     auto update_surface()                           -> void;
 
+    auto get_ticks()                                -> Uint32;
+
+    auto input_check(SDL_Scancode)                  -> bool;
+
     auto toggle_fullscreen()                        -> void;
 
     auto set_draw_color(Uint8, Uint8, Uint8, Uint8) -> void;
@@ -28,6 +32,8 @@ namespace engine {
     // vars
     SDL_Window *_window;
     SDL_Renderer *_renderer;
+
+    const Uint8 *inputs;
 
     SDL_Color _clearColor = SDL_Color{0, 0, 0, 255};
     SDL_Color _drawColor = SDL_Color{255, 255, 255, 255};

@@ -3,7 +3,7 @@
 namespace engine::math {
   // === Constructors & Destructors
   /// Constructor
-  vec3::vec3(double p_x, double p_y, double p_z)
+  vec3::vec3(float p_x, float p_y, float p_z)
     : x(p_x), y(p_y), z(p_z) {}
 
   /// Copy constructor
@@ -12,20 +12,20 @@ namespace engine::math {
 
   // === Methods ===
   /// Vector's length
-  constexpr auto vec3::magnitude() const -> double {
-    return sqrt(x * x + y * y + z * z);
+  constexpr auto vec3::magnitude() const -> float {
+    return sqrtf(x * x + y * y + z * z);
   }
 
   /// Normalize components
   auto vec3::normalize() -> void {
-    double length = magnitude();
+    float length = magnitude();
     x /= length;
     y /= length;
     z /= length;
   }
 
   /// linear interpolation
-  auto vec3::lerp(const vec3& other, double value) -> void {
+  auto vec3::lerp(const vec3& other, float value) -> void {
     x = (other.x - x) * value;
     y = (other.y - y) * value;
     z = (other.z - z) * value;
@@ -34,7 +34,7 @@ namespace engine::math {
   // === Static methods ===
   /// normalize components
   auto vec3::normalized(const vec3& v) -> vec3 {
-    double length = v.magnitude();
+    float length = v.magnitude();
     return vec3(
       v.x / length,
       v.y / length,
@@ -43,21 +43,21 @@ namespace engine::math {
   } 
 
   /// dot product
-  constexpr auto vec3::dot(const vec3& v1, const vec3& v2) -> double {
+  auto vec3::dot(const vec3& v1, const vec3& v2) -> float {
     return v1.x * v2.x + v1.y * v2.y + v1.z + v2.z;
   }
 
   /// cross product
   auto vec3::cross(const vec3& v1, const vec3& v2) -> vec3 {
     return vec3(
-      v1.y * v2.z - v1.y * v2.z,
+      v1.y * v2.z - v1.z * v2.y,
       v1.z * v2.x - v1.x * v2.z,
       v1.x * v2.y - v1.y * v2.x
     );
   }
 
   /// linear interpolation
-  auto vec3::lerp(const vec3& v1, const vec3& v2, double value)  -> vec3 {
+  auto vec3::lerp(const vec3& v1, const vec3& v2, float value)  -> vec3 {
     return vec3(
       (v2.x - v1.x) * value,
       (v2.y - v1.y) * value,
@@ -96,21 +96,21 @@ namespace engine::math {
   }
 
   /// Scale
-  auto vec3::operator*(const double &value) const -> vec3 {
+  auto vec3::operator*(const float &value) const -> vec3 {
     return vec3(x * value, y * value, z * value);
   }
 
-  auto vec3::operator*=(const double &value) -> void {
+  auto vec3::operator*=(const float &value) -> void {
     x *= value;
     y *= value;
     z *= value;
   }
 
-  auto vec3::operator/(const double &value) const -> vec3 {
+  auto vec3::operator/(const float &value) const -> vec3 {
     return vec3(x / value, y / value, z / value);
   }
 
-  auto vec3::operator/=(const double &value) -> void {
+  auto vec3::operator/=(const float &value) -> void {
     x /= value;
     y /= value;
     z /= value;

@@ -11,9 +11,9 @@ namespace engine::gfx {
 
   class Renderer {
   public:
-    Renderer(Window*);
+    Renderer(Window*, math::vec3&, math::vec3&);
 
-    auto set_perspective(float, float, float) -> void;
+    auto set_perspective(float, float, float)           -> void;
 
     auto render_add_mesh(mesh*, math::vec3, math::vec3) -> void;
 
@@ -24,6 +24,8 @@ namespace engine::gfx {
       mesh *mesh;
       math::vec3 pos, rot;
     };
+
+    math::vec3 &campos, &camrot;
 
     std::vector< rend_info > _meshesToDraw;
     math::matrix4x4 _projmat;

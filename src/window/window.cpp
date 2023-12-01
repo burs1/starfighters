@@ -1,5 +1,8 @@
 #include "window.h"
+#include <SDL_keyboard.h>
 #include <SDL_render.h>
+#include <SDL_scancode.h>
+#include <SDL_timer.h>
 
 using namespace std;
 
@@ -45,6 +48,8 @@ namespace engine {
   auto Window::update_events() -> void {
     SDL_Event e;
     while(SDL_PollEvent(&e)) {}
+
+    inputs = SDL_GetKeyboardState(NULL);
   }
 
   auto Window::update_surface() -> void {
@@ -61,6 +66,14 @@ namespace engine {
       _drawColor.b,
       _drawColor.a
     );
+  }
+
+  auto Window::get_ticks() -> Uint32 {
+    return SDL_GetTicks();
+  }
+
+  auto Window::input_check(SDL_Scancode scancode) -> bool {
+    return inputs[scancode];
   }
 
   auto Window::toggle_fullscreen() -> void {

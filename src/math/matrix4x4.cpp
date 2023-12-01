@@ -87,26 +87,32 @@ namespace engine::math {
 
   /// Set x rotation
   auto matrix4x4::set_rotX(float rot) -> void {
-    m[1][1] = cos(rot);
-    m[1][2] = sin(rot);
-    m[2][1] = -sin(rot);
-    m[2][2] = cos(rot);
+    m[0][0] = 1.0f;
+    m[1][1] = cosf(rot);
+    m[1][2] = sinf(rot);
+    m[2][1] = -sinf(rot);
+    m[2][2] = cosf(rot);
+    m[3][3] = 1.0f;
   }
  
   /// Set y rotation
   auto matrix4x4::set_rotY(float rot) -> void {
-    m[0][0] = cos(rot);
-    m[0][2] = -sin(rot);
-    m[2][0] = sin(rot);
-    m[2][2] = cos(rot);
+    m[0][0] = cosf(rot);
+    m[0][2] = -sinf(rot);
+    m[2][0] = sinf(rot);
+    m[1][1] = 1.0f;
+    m[2][2] = cosf(rot);
+    m[3][3] = 1.0f;
   }
 
   /// Set z rotation
   auto matrix4x4::set_rotZ(float rot) -> void {
-    m[0][0] = cos(rot);
-    m[0][1] = sin(rot);
-    m[1][0] = -sin(rot);
-    m[1][1] = cos(rot);
+    m[0][0] = cosf(rot);
+    m[0][1] = sinf(rot);
+    m[1][0] = -sinf(rot);
+    m[1][1] = cosf(rot);
+    m[2][2] = 1.0f;
+    m[3][3] = 1.0f;
   }
 
   /// Set persprective

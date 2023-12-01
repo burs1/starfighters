@@ -1,14 +1,12 @@
 #include "renderer.h"
 
-#include <iostream>
-
 using namespace std;
 using namespace engine::math;
 
 namespace engine::gfx {
-  Renderer::Renderer(Window* window)
-    : _window(window) {
-      set_perspective(60, 0.1f, 1000);
+  Renderer::Renderer(Window* window, vec3 &campos, vec3 &camrot)
+    : _window(window), campos(campos), camrot(camrot) {
+      set_perspective(90, 0.1f, 1000);
   }
 
   auto Renderer::set_perspective(float fov, float near, float far) -> void {
@@ -22,37 +20,42 @@ namespace engine::gfx {
 
   auto Renderer::render() -> void {
     for(auto [mesh, pos, rot] : _meshesToDraw) {
+      matrix4x4 rotmat;
+      rotmat.set_rotX(rot.x);
+
       // Draw faces
       for(auto [p1, p2, p3] : mesh->faces) {
-        // Project verticies
-        vec3 projVerts[] = {mesh->verts[p1], mesh->verts[p2], mesh->verts[p3]};
-        for(int i = 0; i < 3; ++i)
-          projVerts[i] = (projVerts[i] + pos) * _projmat;
+        vec3 curVerts[] = {mesh->verts[p1], mesh->verts[p2], mesh->verts[p3]};
+
+        // Rotate, translate and project verticies
+        for(int i = 0; i < 3; ++i) {
+          curVerts[i] *= rotmat;
+          curVerts[i] += pos;
+          curVerts[i] = curVerts[i] * _projmat;
+        }
 
         // Find normal
-        vec3 l1, l2, nrml;
-        l1 = projVerts[1] - projVerts[0];
-        l2 = projVerts[2] - projVerts[1];
-        nrml = vec3::cross(l1, l2);
+        vec3 nrml;
+        nrml = vec3::cross(curVerts[2] - curVerts[0], curVerts[2] - curVerts[1]);
+        nrml.normalize();
 
         // Don't draw if normal look in other direction
-        if (nrml.z > 0)
-          continue;
+        if (vec3::dot(nrml, vec3::normalized(curVerts[0])) >= 0.0f) { continue; }
 
-        // scale to screen
+        // Scale to screen
         for(int i = 0; i < 3; ++i) {
-          projVerts[i].x += 1;
-          projVerts[i].y += 1;
+          curVerts[i].x += 1;
+          curVerts[i].y += 1;
 
-          projVerts[i].x *= 0.5 * _window->resw;
-          projVerts[i].y *= 0.5 * _window->resh;
+          curVerts[i].x *= 0.5 * _window->resw;
+          curVerts[i].y *= 0.5 * _window->resh;
         }
 
         // Draw lines
         for (int i = 0; i < 3; ++i)
           _window->draw_line(
-            projVerts[i].x, projVerts[i].y,
-            projVerts[(i + 1)%3].x, projVerts[(i + 1)%3].y
+            curVerts[i].x, curVerts[i].y,
+            curVerts[(i + 1)%3].x, curVerts[(i + 1)%3].y
           );
       }
     }
