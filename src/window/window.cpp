@@ -1,10 +1,9 @@
 #include "window.h"
-#include <SDL_keyboard.h>
 #include <SDL_render.h>
 #include <SDL_scancode.h>
-#include <SDL_timer.h>
 
 using namespace std;
+using namespace engine::window;
 
 namespace engine {
   Window::Window (const char *title, int resw, int resh, int winw, int winh, bool fullscreen)
@@ -45,6 +44,8 @@ namespace engine {
     SDL_Quit();
   }
 
+  // methods
+  // ~ main
   auto Window::update_events() -> void {
     SDL_Event e;
     while(SDL_PollEvent(&e)) {}
@@ -68,19 +69,46 @@ namespace engine {
     );
   }
 
+  // ~ user
   auto Window::get_ticks() -> Uint32 {
     return SDL_GetTicks();
   }
 
+  // ~ input
   auto Window::input_check(SDL_Scancode scancode) -> bool {
     return inputs[scancode];
   }
 
+  auto Window::input_axis(SDL_Scancode l, SDL_Scancode r) -> int {
+    return inputs[r] - inputs[l];
+  }
+
+
+  
+  // ~ window
   auto Window::toggle_fullscreen() -> void {
     _fullscreen = !_fullscreen;
     SDL_SetWindowFullscreen(_window, _fullscreen ? SDL_WINDOW_FULLSCREEN : SDL_WINDOW_SHOWN);
   }
 
+  // ~ resources
+  auto Window::load_sprite(const char *path, const char *name) -> void {
+    // Check if sprite was already opened
+    if (_sprites.contains(name))
+      throw runtime_error("Sprite with name \"" + string(name) + "\" already exists");
+
+    SDL_Texture* texture = IMG_LoadTexture(_renderer, path);
+
+    // Check if texture was successfuly loaded
+    if (not texture)
+      throw runtime_error( SDL_GetError() );
+
+    _sprites[name] = new Sprite(texture);
+
+  }
+
+
+  // ~ draw
   auto Window::set_draw_color(Uint8 r, Uint8 g, Uint8 b, Uint8 a) -> void {
     SDL_SetRenderDrawColor(_renderer, r, g, b, a);
     _drawColor = SDL_Color{r, g, b, a};
@@ -89,4 +117,22 @@ namespace engine {
   auto Window::draw_line(int x1, int y1, int x2, int y2) -> void {
     SDL_RenderDrawLine(_renderer, x1, y1, x2, y2);
   }
+  
+  auto Window::draw_sprite(const char* sprname, int x, int y, float xscale, float yscale) -> void {
+    Sprite *spr = _sprites[sprname];
+    SDL_Rect draw_rect{x, y, int(spr->w * xscale), int(spr->h * yscale)};
+
+    if (SDL_RenderCopy(_renderer, spr->texture, &spr->rect, &draw_rect) < 0)
+      throw runtime_error( SDL_GetError() );
+  }
+
+  auto Window::draw_sprite_ex(const char* sprname, int x, int y, float xscale, float yscale, float angle, int xcent, int ycent) -> void {
+    Sprite *spr = _sprites[sprname];
+    SDL_Rect draw_rect{x, y, int(spr->w * xscale), int(spr->h * yscale)};
+    SDL_Point center{xcent, ycent};
+
+    if (SDL_RenderCopyEx(_renderer, spr->texture, &spr->rect, &draw_rect, angle, &center, SDL_FLIP_NONE) < 0)
+      throw runtime_error( SDL_GetError() );
+  }
+
 }

@@ -3,6 +3,7 @@ set(INCLUDE_DIRS window)
 
 # - add subdirs
 add_subdirectory(gfx)
+add_subdirectory(gmpl)
 add_subdirectory(math)
 add_subdirectory(window)
 
@@ -17,5 +18,6 @@ target_link_libraries(
   Engine
   PUBLIC Gfx
   PUBLIC Window
+  PUBLIC Gameplay
   PUBLIC EngineMath
 )

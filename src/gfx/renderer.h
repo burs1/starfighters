@@ -1,5 +1,6 @@
 #pragma once
 
+#include <map>
 #include <cmath>
 #include <vector>
 #include "mesh.h"
@@ -13,23 +14,33 @@ namespace engine::gfx {
   public:
     Renderer(Window*, math::vec3&, math::vec3&);
 
+    ~Renderer();
+
+    // methods
+    // ~ set up
     auto set_perspective(float, float, float)           -> void;
 
-    auto render_add_mesh(mesh*, math::vec3, math::vec3) -> void;
+    // ~ resources
+    auto load_mesh(const char*, const char*)            -> void;
+
+    // ~ draw
+    auto render_add_mesh(const char*, math::vec3, math::vec3) -> void;
 
     auto render() -> void;
 
   private:
     struct rend_info {
-      mesh *mesh;
+      const char *meshname;
       math::vec3 pos, rot;
     };
 
+    Window *_window;
     math::vec3 &campos, &camrot;
+
+    std::map< const char*, mesh* > _meshes;
 
     std::vector< rend_info > _meshesToDraw;
     math::matrix4x4 _projmat;
 
-    Window *_window;
   };
 }
